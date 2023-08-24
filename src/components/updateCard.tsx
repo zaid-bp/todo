@@ -1,27 +1,32 @@
 import { updatingTodo, cancleUpdate } from '../features/slices/todoSlice';
-import { useDispatch } from 'react-redux'
-import { useRef } from 'react';
-
-const UpdateCard:React.FC<{id:number}> = (id) =>  {
+import { useDispatch, useSelector } from 'react-redux'
+import { useState } from 'react';
+import cancle from '../assets/cancel.png'
+import { RootState } from '../features/store';
+const UpdateCard:React.FC = () =>  {
+    const prevVal = useSelector((state:RootState)=>state.todo.prevValue)
     const dispatch = useDispatch();
-    const updateInputRef=useRef<HTMLInputElement | null>(null);
+    const [newValue, setNewValue] = useState(prevVal);
+    const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+      setNewValue(event.target.value); 
+    };
 
-    const handleUpdate=(id:number)=>{
-        const newValue=updateInputRef.current!.value
-        if(updateInputRef.current!.value)
-        dispatch(updatingTodo({newValue, id}))
+    const handleUpdate=()=>{
+        dispatch(updatingTodo(newValue))
       }
+
   return (
-       <tr className='py-2'>
-       <td></td>
-        <td><input type='text' className='w w-40 sm:w-7/12' ref={updateInputRef}/></td>
-        <td className='hidden sm:block'></td><td className='hidden sm:block'></td>
-        <td className='flex sm:ml-auto w-auto sm:w-32 text-sm sm:text-md'>
-        <button className='ml-auto bg-white px-2 rounded-md mr-2 font-serif' onClick={()=>dispatch(cancleUpdate())}>cancle</button>
-          <button className=' bg-white px-2 rounded-md mr-2 font-serif' onClick={()=>handleUpdate(id.id)}>save</button>
-        </td>
-        
-       </tr>
+    <div className='fixed h-screen w-screen z-20'>
+      <div className='absolute backdrop-blur-md bg-black/30 w-full h-full flex items-center justify-center'>
+              <div className='bg-white flex flex-col items-end p-1'>
+                <button className='' onClick={()=>dispatch(cancleUpdate())}><img src={cancle} alt="" /></button>
+                <form className='p-5 flex flex-col space-y-3' onSubmit={(e)=>e.preventDefault()}>
+                  <input className='border-b-2 outline-none' value={newValue} onChange={handleChange} type="text" placeholder='enter new value' />
+                  <button className='bg-green-200 rounded-md px-3 py-1 font-bold' type="submit" onClick={()=>handleUpdate()}>save</button>
+                </form>
+              </div>
+      </div>
+    </div>
   )
 }
 

@@ -43,7 +43,7 @@ list.length?noOfTodo=`${list.length} Total, ${comp} Completed and ${pend} Pendin
   return (
     <>
     <div className='sm:grid grid-cols-2 text-center'>
-    <div>
+    <div className='sm:text-left text-center'>
       <h3 className='text-gray-800 sm:text-4xl font-medium text-xl'>Todo's</h3>
       <p>{noOfTodo}</p>
    </div>

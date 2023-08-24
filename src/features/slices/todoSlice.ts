@@ -7,7 +7,11 @@ interface todo{
     todo:string[];
     searchedTodo:string[];
     status:boolean[];
-    timeCreated:{currDate:string;currTime:string;}[]
+    popUp:boolean;
+    timeCreated:{currDate:string;currTime:string;}[];
+    message: string;
+    prevValue: string;
+
 }
 const initialState:todo={
     shouldUpdate:false,
@@ -16,9 +20,11 @@ const initialState:todo={
     todo:[],
     searchedTodo:[],
     status:[],
-    timeCreated:[]
+    popUp:false,
+    timeCreated:[],
+    message: '',
+    prevValue: '',
 }
-// const todoCopy=[...state.todo];
 
 
 const todoSlice= createSlice({
@@ -26,11 +32,14 @@ const todoSlice= createSlice({
     initialState,
     reducers:{
         addTodos(state, action:PayloadAction<string>){
+            state.message = 'added'
             state.todo=[...state.todo, action.payload]
             state.status=[...state.status, false]
             state.searchedTodo=[...state.todo]
+            state.popUp = true
         },
         removeTodo(state, action:PayloadAction<number>){
+            state.message = 'deleted'
             const newList:string[]= state.todo.filter((_todo, index)=>{
                 return index!==action.payload
             })
@@ -39,16 +48,21 @@ const todoSlice= createSlice({
             // use slice method for managing date and time and todo
             state.timeCreated.splice(action.payload,1)
             state.status.splice(action.payload,1)
+            state.popUp = true
         },
 
         updateTodo(state, action:PayloadAction<number>){
             state.updateItemId = action.payload
+            state.prevValue = state.todo[action.payload]
             state.shouldUpdate=true
         },
-
-        updatingTodo(state, action){
-            state.todo[action.payload.id]=action.payload.newValue;
+        
+        updatingTodo(state, action:PayloadAction<string>){
+            state.message = 'updated'
+            state.todo[state.updateItemId]=action.payload
+            // state.todo[action.payload.id]=action.payload.newValue;
             state.shouldUpdate=false
+            state.popUp = true
         },
 
         cancleUpdate(state){
@@ -113,10 +127,16 @@ const todoSlice= createSlice({
                 state.draggedId=null;
               }
             
-        }
+        }, 
+        closePopUp(state){
+            state.popUp=false
+        },
+        openPopUp(state){
+            state.popUp=true
+        },
         
 
     }
 })
 export default todoSlice.reducer
-export const {addTodos, removeTodo, updateTodo, updatingTodo, searchTodos, setStatus, setDate, cancleUpdate, dragStart, dragEnd, drop} = todoSlice.actions
+export const {addTodos, removeTodo, updateTodo, updatingTodo, searchTodos, setStatus, setDate, cancleUpdate, dragStart, dragEnd, drop, openPopUp, closePopUp} = todoSlice.actions

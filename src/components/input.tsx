@@ -1,5 +1,4 @@
 import React from 'react'
-import UpdateCard from './updateCard';
 import Actions from './actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { dragStart, dragEnd, drop } from '../features/slices/todoSlice';
@@ -8,8 +7,6 @@ import Card from './card';
 
 const Input: React.FC <{item: string, id: number, status: string}>= ({item, id, status}) => {
     const store = useSelector((state:RootState)=>state.todo)
-    const shouldUpdate=store.shouldUpdate;
-    const updateItemId=store.updateItemId;
     const taskStatus= store.status;
     
 
@@ -32,18 +29,14 @@ const Input: React.FC <{item: string, id: number, status: string}>= ({item, id, 
       event.preventDefault()
       dispatch(drop(id))
     }
-    return (
-    shouldUpdate && updateItemId === id?(
-
-      <UpdateCard id={id}/>
-
-       ):(
+    return( 
        <tr className={`text-center ${ taskStatus[id] ? "bg-[#bcffb7]" : "bg-white"} border-b border-gray-300 sm:text-md text-sm`}
        draggable='true' onDragStart={()=>handleDragStart(id)} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDrop={(e)=>handleDrop(e, id)}>
                         <Card id={id} item={item} status={status} />
                         <Actions index={id}/>
-      </tr>)
-  )
+      </tr>
+      )
+  
 }
 
 export default Input
