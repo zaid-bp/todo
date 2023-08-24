@@ -44,7 +44,7 @@ list.length?noOfTodo=`${list.length} Total, ${comp} Completed and ${pend} Pendin
     <>
     <div className='sm:grid grid-cols-2 text-center'>
     <div className='sm:text-left text-center'>
-      <h3 className='text-gray-800 sm:text-4xl font-medium text-xl'>Todo's</h3>
+      <h3 className='text-gray-800 sm:text-4xl font-medium text-xl'>ToDoWave</h3>
       <p>{noOfTodo}</p>
    </div>
    <div className='sm:flex justify-end'>
